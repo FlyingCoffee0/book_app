@@ -97,26 +97,35 @@ Future<List<Product>> getProductsByCategory(int categoryId) async {
 
 
   // Favorilere ekle
-  Future<void> addToFavorites(int userId, int productId) async {
-    await _apiService.post(
+Future<void> addToFavorites(int userId, int productId) async {
+  try {
+    final response = await _apiService.post(
       "like",
       {
         "user_id": userId,
         "product_id": productId,
       },
     );
+    print("addToFavorites successful: ${response.data}");
+  } catch (e) {
+    print("addToFavorites error: $e");
+    throw e; // Hatanın yukarıya iletilmesi
   }
+}
 
   // Favorilerden çıkar
-  Future<void> removeFromFavorites(int userId, int productId) async {
-    await _apiService.post(
-      "unlike",
-      {
-        "user_id": userId,
-        "product_id": productId,
-      },
-    );
+ Future<void> removeFromFavorites(int userId, int productId) async {
+  final response = await _apiService.post(
+    "unlike",
+    {
+      "user_id": userId,
+      "product_id": productId,
+    },
+  );
+  if (response.statusCode != 200) {
+    throw Exception("Failed to remove from favorites. Server returned: ${response.statusCode}");
   }
+}
      // Favorileri alma
   Future<List<Product>> getFavorites() async {
   final response = await _apiService.get("favorites");

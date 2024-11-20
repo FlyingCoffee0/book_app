@@ -10,13 +10,23 @@ class ApiService {
     };
   }
 
-  Future<Response> post(String endpoint, Map<String, dynamic> data) async {
-    try {
-      return await _dio.post(endpoint, data: data);
-    } on DioError catch (e) {
-      throw e.response?.data["message"] ?? "An error occurred";
+Future<Response> post(String endpoint, Map<String, dynamic> data) async {
+  try {
+    return await _dio.post(endpoint, data: data);
+  } on DioError catch (e) {
+    if (e.response != null) {
+      // Sunucudan yanıt gelmiş ancak hata kodu dönmüş
+      final errorMessage = e.response?.data["message"] ?? "Unexpected server error";
+      print("API Error: $errorMessage, Status Code: ${e.response?.statusCode}");
+      throw errorMessage;
+    } else {
+      // Sunucudan yanıt gelmemiş (internet bağlantısı vb.)
+      print("DioError: ${e.message}");
+      throw "Network error: ${e.message}";
     }
   }
+}
+
 
   Future<Response> get(String endpoint) async {
     try {
