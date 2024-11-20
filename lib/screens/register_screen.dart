@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piton_books/screens/login_screen.dart';
-import '../providers/api_provider.dart';
-import '../services/auth_service.dart';
+import '../providers/auth_provider.dart'; 
 
 class RegisterScreen extends ConsumerStatefulWidget {
   @override
@@ -16,10 +15,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
-  bool _isLoading = false;
-
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    final isLoading = authState.isLoading;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -93,7 +93,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 },
               ),
               SizedBox(height: 20),
-              _isLoading
+              isLoading
                   ? Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                       onPressed: () {
@@ -111,18 +111,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Future<void> _register() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    final authService = getIt<AuthService>();
-
     try {
-      await authService.register(
-        _nameController.text,
-        _emailController.text,
-        _passwordController.text,
-      );
+      await ref.read(authProvider.notifier).register(
+            name: _nameController.text,
+            email: _emailController.text,
+            password: _passwordController.text,
+          );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Registration successful!")),
       );
@@ -134,10 +128,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error.toString())),
       );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 }

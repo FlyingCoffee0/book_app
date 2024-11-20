@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:piton_books/providers/api_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/product_model.dart';
-import '../services/catalog_service.dart';
+import '../providers/catalog_provider.dart';
 
-class BookDetailsScreen extends StatefulWidget {
+class BookDetailsScreen extends ConsumerStatefulWidget {
   final Product product;
 
   BookDetailsScreen({required this.product});
@@ -12,20 +12,12 @@ class BookDetailsScreen extends StatefulWidget {
   _BookDetailsScreenState createState() => _BookDetailsScreenState();
 }
 
-class _BookDetailsScreenState extends State<BookDetailsScreen> {
+class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
   bool isFavorite = false;
-  late Future<String?> _coverImageFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    // Cover image için URL'yi yükler
-    _coverImageFuture = Product.fetchImageUrl(widget.product.fileName);
-  }
 
   @override
   Widget build(BuildContext context) {
-    final catalogService = getIt<CatalogService>();
+    final catalogService = ref.read(catalogServiceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +31,7 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
             // Kapak görselini dinamik olarak yükleme
             Center(
               child: FutureBuilder<String?>(
-                future: _coverImageFuture,
+                future: Product.fetchImageUrl(widget.product.fileName),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
@@ -71,10 +63,25 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            Text(
-              "This is a placeholder summary for the book '${widget.product.name}'. Replace this with the actual summary when available.",
-              style: TextStyle(fontSize: 16),
-            ),
+            FutureBuilder<String?>(
+  future: Future.value(widget.product.description), // Ürün açıklamasını doğrudan kullanıyoruz
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return CircularProgressIndicator();
+    } else if (snapshot.hasError || snapshot.data == null || snapshot.data!.isEmpty) {
+      return Text(
+        "Summary not available.",
+        style: TextStyle(fontSize: 16),
+      );
+    } else {
+      return Text(
+        snapshot.data!,
+        style: TextStyle(fontSize: 16),
+      );
+    }
+  },
+),
+
             Spacer(),
             // Favori ve satın alma butonları
             Row(

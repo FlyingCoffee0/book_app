@@ -1,36 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/product_model.dart';
-import '../services/catalog_service.dart';
-import '../providers/api_provider.dart';
+import '../providers/providers.dart';
 import 'book_details_screen.dart';
 
-class BestSellerScreen extends StatefulWidget {
+class BestSellerScreen extends ConsumerWidget {
   final int categoryId;
 
   BestSellerScreen({required this.categoryId});
 
   @override
-  _BestSellerScreenState createState() => _BestSellerScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final catalogService = ref.read(catalogServiceProvider);
 
-class _BestSellerScreenState extends State<BestSellerScreen> {
-  late Future<List<Product>> _productsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    final catalogService = getIt<CatalogService>();
-    _productsFuture = catalogService.getProductsByCategory(widget.categoryId);
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Best Seller"),
       ),
       body: FutureBuilder<List<Product>>(
-        future: _productsFuture,
+        future: catalogService.getProductsByCategory(categoryId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

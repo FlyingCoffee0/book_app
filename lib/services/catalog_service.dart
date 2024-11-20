@@ -132,4 +132,25 @@ Future<void> addToFavorites(int userId, int productId) async {
   final List data = response.data["favorites"];
   return data.map((json) => Product.fromJson(json)).toList();
 }
+
+Future<String?> fetchSummary(int productId) async {
+  try {
+    final response = await _apiService.get("product_summary/$productId");
+    return response.data["summary"] ?? "No summary available.";
+  } catch (e) {
+    print("Error fetching summary for product $productId: $e");
+    return null;
+  }
+}
+
+Future<Product> getProductById(int productId) async {
+  final response = await _apiService.get("product/$productId");
+  final data = response.data["product"];
+  if (data == null) {
+    throw "Product not found.";
+  }
+  return Product.fromJson(data);
+}
+
+
 }

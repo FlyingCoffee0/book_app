@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:piton_books/screens/register_screen.dart';
-import '../providers/api_provider.dart';
-import '../services/auth_service.dart';
+import '../providers/auth_provider.dart'; // AuthProvider burada tanımlanıyor
+import 'register_screen.dart';
 import 'catalog_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -15,10 +14,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _rememberMe = false;
   final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    // AuthProvider ile authState'i takip ediyoruz
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider.notifier);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -109,12 +111,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ],
               ),
               SizedBox(height: 20),
-              _isLoading
+              authState.isLoading
                   ? Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          _login();
+                          _login(authNotifier);
                         }
                       },
                       child: Center(child: Text("Login")),
@@ -126,20 +128,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Future<void> _login() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    final authService = getIt<AuthService>();
-
+  Future<void> _login(AuthNotifier authNotifier) async {
     try {
-      await authService.login(
-        _emailController.text,
-        _passwordController.text,
+      await authNotifier.login(
+        email: _emailController.text,
+        password: _passwordController.text,
+        rememberMe: _rememberMe,
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login successful!")));
+        SnackBar(content: Text("Login successful!")),
+      );
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => CatalogScreen()),
@@ -148,10 +146,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error.toString())),
       );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 }
