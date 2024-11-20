@@ -27,36 +27,36 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
         title: Text("Catalog"),
       ),
       body: FutureBuilder<List<Category>>(
-        future: _categoriesFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text("No categories found"));
-          } else {
-            final categories = snapshot.data!;
-            return ListView.builder(
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                return ListTile(
-                  title: Text(category.name),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BestSellerScreen(categoryId: category.id),
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          }
+  future: _categoriesFuture,
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Center(child: CircularProgressIndicator());
+    } else if (snapshot.hasError) {
+      return Center(child: Text("Error: ${snapshot.error}"));
+    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+      return Center(child: Text("No categories found"));
+    } else {
+      final categories = snapshot.data!;
+      return ListView.builder(
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          return ListTile(
+            title: Text(category.name),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BestSellerScreen(categoryId: category.id),
+                ),
+              );
+            },
+          );
         },
-      ),
-    );
-  }
+      );
+    }
+  },
+      )
+);
+}
 }

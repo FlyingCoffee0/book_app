@@ -10,33 +10,47 @@ class CatalogService {
 
   CatalogService(this._apiService, this._storageService);
 
-  // Kategorileri çek ve cache'e kaydet
-  Future<List<Category>> getCategories() async {
-    final cacheKey = "categories";
-    final cacheTimestampKey = "categories_timestamp";
+Future<List<Category>> getCategories() async {
+  final cacheKey = "categories";
+  final cacheTimestampKey = "categories_timestamp";
 
-    // Cache kontrolü
-    final cachedData = await _storageService.readData(cacheKey);
-    final cachedTimestamp = await _storageService.readData(cacheTimestampKey);
+  // Cache kontrolü
+  final cachedData = await _storageService.readData(cacheKey);
+  final cachedTimestamp = await _storageService.readData(cacheTimestampKey);
 
-    if (cachedData != null && cachedTimestamp != null) {
-      final cacheTime = DateTime.parse(cachedTimestamp);
-      final now = DateTime.now();
+  if (cachedData != null && cachedTimestamp != null) {
+    final cacheTime = DateTime.parse(cachedTimestamp);
+    final now = DateTime.now();
 
-      if (now.difference(cacheTime).inHours < 24) {
-        // Cache geçerli
-        return (cachedData as List).map((json) => Category.fromJson(json)).toList();
-      }
+    if (now.difference(cacheTime).inHours < 24) {
+      print("Using cached categories data.");
+      return (cachedData as List).map((json) => Category.fromJson(json)).toList();
+    }
+  }
+
+  // API'den çek ve cache'e kaydet
+  try {
+    final response = await _apiService.get("categories");
+    print("API Response: ${response.data}");
+
+    // 'category' anahtarını kontrol et
+    final List? data = response.data["category"];
+    if (data == null) {
+      throw "No categories found from API. Response: ${response.data}";
     }
 
-    // API'den çek ve cache'e kaydet
-    final response = await _apiService.get("categories");
-    final List data = response.data["categories"];
+    // Cache'e kaydet
     await _storageService.saveData(cacheKey, data);
     await _storageService.saveData(cacheTimestampKey, DateTime.now().toIso8601String());
 
+    // Listeye dönüştür
     return data.map((json) => Category.fromJson(json)).toList();
+  } catch (e, stackTrace) {
+    print("Error fetching categories: $e");
+    print("StackTrace: $stackTrace");
+    throw "Failed to load categories: $e";
   }
+}
 
   // Kategoriye göre ürünleri çek ve cache'e kaydet
   Future<List<Product>> getProductsByCategory(int categoryId) async {
