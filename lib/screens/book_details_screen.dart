@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:piton_books/providers/api_provider.dart';
 import '../models/product_model.dart';
 import '../services/catalog_service.dart';
-import '../providers/api_provider.dart';
 
-class BookDetailsScreen extends ConsumerStatefulWidget {
+class BookDetailsScreen extends StatefulWidget {
   final Product product;
 
   BookDetailsScreen({required this.product});
@@ -13,8 +12,16 @@ class BookDetailsScreen extends ConsumerStatefulWidget {
   _BookDetailsScreenState createState() => _BookDetailsScreenState();
 }
 
-class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
+class _BookDetailsScreenState extends State<BookDetailsScreen> {
   bool isFavorite = false;
+  late Future<String?> _coverImageFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // Cover image için URL'yi yükler
+    _coverImageFuture = Product.fetchImageUrl(widget.product.fileName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +36,23 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Kapak görselini dinamik olarak yükleme
             Center(
-              child: Image.network(
-                widget.product.coverImage,
-                height: 200,
-                fit: BoxFit.cover,
+              child: FutureBuilder<String?>(
+                future: _coverImageFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError || snapshot.data == null) {
+                    return Icon(Icons.image_not_supported, size: 200);
+                  } else {
+                    return Image.network(
+                      snapshot.data!,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    );
+                  }
+                },
               ),
             ),
             SizedBox(height: 20),
@@ -57,6 +76,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
               style: TextStyle(fontSize: 16),
             ),
             Spacer(),
+            // Favori ve satın alma butonları
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:piton_books/services/auth_service.dart';
 import 'package:piton_books/services/catalog_service.dart';
+import 'package:piton_books/services/image_service.dart';
 import 'package:piton_books/services/storage_service.dart';
 import '../services/api_service.dart';
 
@@ -13,4 +14,5 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => AuthService(getIt<ApiService>()));
   getIt.registerLazySingleton(() => StorageService()); 
   getIt.registerLazySingleton(() => CatalogService(getIt<ApiService>(), getIt<StorageService>()));
+  getIt.registerLazySingleton(() => ImageService(getIt<Dio>()));
 }

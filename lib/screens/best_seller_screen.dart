@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/product_model.dart';
 import '../services/catalog_service.dart';
 import '../providers/api_provider.dart';
 import 'book_details_screen.dart';
 
-class BestSellerScreen extends ConsumerStatefulWidget {
+class BestSellerScreen extends StatefulWidget {
   final int categoryId;
 
   BestSellerScreen({required this.categoryId});
@@ -14,7 +13,7 @@ class BestSellerScreen extends ConsumerStatefulWidget {
   _BestSellerScreenState createState() => _BestSellerScreenState();
 }
 
-class _BestSellerScreenState extends ConsumerState<BestSellerScreen> {
+class _BestSellerScreenState extends State<BestSellerScreen> {
   late Future<List<Product>> _productsFuture;
 
   @override
@@ -61,7 +60,18 @@ class _BestSellerScreenState extends ConsumerState<BestSellerScreen> {
                   child: Card(
                     child: Column(
                       children: [
-                        Image.network(product.coverImage, height: 100),
+                        FutureBuilder<String?>(
+                          future: product.coverImage,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError || snapshot.data == null) {
+                              return Icon(Icons.image_not_supported, size: 100);
+                            } else {
+                              return Image.network(snapshot.data!, height: 100, fit: BoxFit.cover);
+                            }
+                          },
+                        ),
                         Text(product.name),
                         Text("\$${product.price.toStringAsFixed(2)}"),
                       ],

@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/product_model.dart';
 import '../services/catalog_service.dart';
 import '../providers/api_provider.dart';
 import 'book_details_screen.dart';
 
-class FavoritesScreen extends ConsumerStatefulWidget {
+class FavoritesScreen extends StatefulWidget {
   @override
   _FavoritesScreenState createState() => _FavoritesScreenState();
 }
 
-class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
+class _FavoritesScreenState extends State<FavoritesScreen> {
   late Future<List<Product>> _favoritesFuture;
 
   @override
   void initState() {
     super.initState();
     final catalogService = getIt<CatalogService>();
-    _favoritesFuture = catalogService.getFavorites(); // Favorileri API'den alıyoruz
+    _favoritesFuture = catalogService.getFavorites();
   }
 
   @override
@@ -42,36 +41,31 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               itemBuilder: (context, index) {
                 final product = favorites[index];
                 return ListTile(
-                  leading: Image.network(
-                    product.coverImage,
-                    height: 50,
-                    width: 50,
-                    fit: BoxFit.cover,
+                  leading: FutureBuilder<String?>(
+                    future: product.coverImage,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError || snapshot.data == null) {
+                        return Icon(Icons.image_not_supported);
+                      } else {
+                        return Image.network(snapshot.data!, height: 50, width: 50, fit: BoxFit.cover);
+                      }
+                    },
                   ),
                   title: Text(product.name),
                   subtitle: Text("\$${product.price.toStringAsFixed(2)}"),
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () async {
-                      // Favorilerden kaldırma işlemi
-                      try {
-                        final catalogService = getIt<CatalogService>();
-                        await catalogService.removeFromFavorites(1, product.id); // Backend'e istek
-                        setState(() {
-                          favorites.removeAt(index); // Listeyi güncelle
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("${product.name} removed from favorites")),
-                        );
-                      } catch (error) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Error: $error")),
-                        );
-                      }
+                      final catalogService = getIt<CatalogService>();
+                      await catalogService.removeFromFavorites(1, product.id);
+                      setState(() {
+                        favorites.removeAt(index);
+                      });
                     },
                   ),
                   onTap: () {
-                    // Ürün detayına git
                     Navigator.push(
                       context,
                       MaterialPageRoute(
