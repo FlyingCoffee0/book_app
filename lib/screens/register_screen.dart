@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:piton_books/screens/login_screen.dart';
-import '../providers/auth_provider.dart'; 
+import '../providers/auth_provider.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   @override
@@ -22,88 +22,181 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Icon(
-                  Icons.shop,
-                  color: Colors.deepPurple,
-                  size: 100,
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                "Register an account",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: "Name",
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your name";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: "E-mail",
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your email";
-                  } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                    return "Please enter a valid email";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your password";
-                  } else if (value.length < 6 || value.length > 20) {
-                    return "Password must be 6-20 characters";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _register();
-                        }
-                      },
-                      child: Center(child: Text("Register")),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'assets/logo.png', // Logo yerine görsel kullanılıyor
+                          height: 100,
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          "Welcome",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0x99090937),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Register an account",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Color(0xFF090937),
+                          ),
+                        ),
+                      ],
                     ),
-            ],
+                  ),
+                  SizedBox(height: 40),
+                  Text(
+                    "Name",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF090937),
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      hintText: "John Doe",
+                      hintStyle: TextStyle(color: Color(0x66090937)),
+                      filled: true,
+                      fillColor: Color(0xFFF3F1FF),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    style: TextStyle(color: Colors.black),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter your name";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "E-mail",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF090937),
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      hintText: "john@mail.com",
+                      hintStyle: TextStyle(color: Color(0x66090937)),
+                      filled: true,
+                      fillColor: Color(0xFFF3F1FF),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    style: TextStyle(color: Colors.black),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter your email";
+                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                          .hasMatch(value)) {
+                        return "Please enter a valid email";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "Password",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF090937),
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      hintText: "●●●●●●●●",
+                      hintStyle: TextStyle(color: Color(0x66090937)),
+                      filled: true,
+                      fillColor: Color(0xFFF3F1FF),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    obscureText: true,
+                    style: TextStyle(color: Colors.black),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter your password";
+                      } else if (value.length < 6 || value.length > 20) {
+                        return "Password must be 6-20 characters";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Login",
+                        style: TextStyle(color: Color(0xFF6C63FF)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _register();
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              backgroundColor: Color(0xFFFF7A59),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              "Register",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
