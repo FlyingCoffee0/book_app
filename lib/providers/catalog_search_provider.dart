@@ -3,12 +3,15 @@ import '../models/category_model.dart';
 import '../models/product_model.dart';
 import 'providers.dart';
 
-// Arama sorgusu için StateProvider
+// Kategorilerde arama için StateProvider
 final searchQueryProvider = StateProvider<String>((ref) => "");
 
-// Kategorilerde arama için FutureProvider
+// Kategori isimleri üzerinden arama sağlayan provider
+final categorySearchQueryProvider = StateProvider<String>((ref) => "");
+
+// Kategoriler için FutureProvider
 final filteredCategoriesProvider = FutureProvider<List<Category>>((ref) {
-  final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
+  final searchQuery = ref.watch(categorySearchQueryProvider).toLowerCase(); // Yeni arama provider'ı
   final catalogService = ref.watch(catalogServiceProvider);
 
   return catalogService.getCategories().then(
@@ -18,7 +21,7 @@ final filteredCategoriesProvider = FutureProvider<List<Category>>((ref) {
   );
 });
 
-// Ürünlerde arama için FutureProvider
+// Ürünlerde arama için FutureProvider (kategoriye göre)
 final filteredProductsProvider = FutureProvider.autoDispose.family<List<Product>, int>((ref, categoryId) {
   final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
   final catalogService = ref.watch(catalogServiceProvider);

@@ -113,6 +113,19 @@ Future<void> addToFavorites(int userId, int productId) async {
   }
 }
 
+Future<List<Product>> getAllProducts() async {
+  try {
+    final response = await _apiService.get("products/all"); 
+    final List? data = response.data["products"];
+    if (data == null) throw "No products found";
+    return data.map((json) => Product.fromJson(json)).toList();
+  } catch (e) {
+    print("Error fetching all products: $e");
+    throw "Failed to fetch products: $e";
+  }
+}
+
+
   // Favorilerden çıkar
  Future<void> removeFromFavorites(int userId, int productId) async {
   final response = await _apiService.post(
