@@ -76,25 +76,21 @@ class CatalogScreen extends ConsumerWidget {
             child: TextField(
               decoration: InputDecoration(
                 hintText: "Search categories ...",
-                hintStyle:
-                    TextStyle(color: Color(0x66090937)), 
+                hintStyle: TextStyle(color: Color(0x66090937)),
                 prefixIcon: Icon(Icons.search),
                 filled: true,
-                fillColor: Color(0xFFF4F4FF), 
+                fillColor: Color(0xFFF4F4FF),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none, 
+                  borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(
-                      color: Color(0x66090937),
-                      width: 1.5), 
+                  borderSide: BorderSide(color: Color(0x66090937), width: 1.5),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(
-                      color: Colors.transparent), 
+                  borderSide: BorderSide(color: Colors.transparent),
                 ),
               ),
               onChanged: (value) {
@@ -103,7 +99,6 @@ class CatalogScreen extends ConsumerWidget {
               },
             ),
           ),
-
           // Books Display
           Expanded(
             child: filteredCategories.when(
@@ -159,7 +154,7 @@ class CatalogScreen extends ConsumerWidget {
                               return products.when(
                                 data: (products) {
                                   return SizedBox(
-                                    height: 200,
+                                    height: 180,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
                                       itemCount: products.length,
@@ -177,14 +172,13 @@ class CatalogScreen extends ConsumerWidget {
                                             );
                                           },
                                           child: Container(
-                                            width: 150, // Consistent card width
+                                            width: 200,
                                             margin: EdgeInsets.only(right: 10),
                                             child: Card(
                                               elevation: 3,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                              child: Row(
                                                 children: [
+                                                  // Book image on the left side
                                                   FutureBuilder<String?>(
                                                     future: product.coverImage,
                                                     builder:
@@ -194,7 +188,9 @@ class CatalogScreen extends ConsumerWidget {
                                                           ConnectionState
                                                               .waiting) {
                                                         return SizedBox(
-                                                          height: 100,
+                                                          height: 150,
+                                                          width:
+                                                              100, // Adjusted width for image
                                                           child: Center(
                                                               child:
                                                                   CircularProgressIndicator()),
@@ -204,7 +200,9 @@ class CatalogScreen extends ConsumerWidget {
                                                           snapshot.data ==
                                                               null) {
                                                         return SizedBox(
-                                                          height: 100,
+                                                          height: 150,
+                                                          width:
+                                                              100, // Adjusted width for image
                                                           child: Icon(
                                                               Icons
                                                                   .image_not_supported,
@@ -213,36 +211,53 @@ class CatalogScreen extends ConsumerWidget {
                                                       } else {
                                                         return Image.network(
                                                           snapshot.data!,
-                                                          height: 100,
+                                                          height: 150,
                                                           width:
-                                                              double.infinity,
+                                                              100, // Adjusted width for image
                                                           fit: BoxFit.cover,
                                                         );
                                                       }
                                                     },
                                                   ),
+                                                  // Book name, author, and price on the right side
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.all(
-                                                            8.0),
+                                                            16.0),
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text(
-                                                          product.name,
-                                                          style: TextStyle(
-                                                              fontSize: 14),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
+                                                        SizedBox(
+                                                          width:
+                                                              60, // Limit the width of the text field
+                                                          child: Text(
+                                                            product.name,
+                                                            style: TextStyle(
+                                                                fontSize: 14),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines:
+                                                                5, // Allow text to wrap and take multiple lines
+                                                          ),
                                                         ),
-                                                        SizedBox(height: 4),
-                                                        Text(
-                                                          "\$${product.price.toStringAsFixed(2)}",
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.grey,
+
+                                                        Spacer(), 
+                                                        Align(
+                                                          alignment: Alignment.bottomCenter
+                                                              , 
+                                                          child: Text(
+                                                            "\$${product.price.toStringAsFixed(2)}",
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: Color(
+                                                                  0xFF6251DD),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                       ],
