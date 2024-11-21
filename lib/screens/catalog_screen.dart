@@ -142,6 +142,9 @@ class CatalogScreen extends ConsumerWidget {
                                     ),
                                   );
                                 },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Color(0xFFEF6B4A), 
+                                ),
                                 child: Text("View All"),
                               ),
                             ],
@@ -243,11 +246,10 @@ class CatalogScreen extends ConsumerWidget {
                                                                 5, // Allow text to wrap and take multiple lines
                                                           ),
                                                         ),
-
-                                                        Spacer(), 
+                                                        Spacer(),
                                                         Align(
-                                                          alignment: Alignment.bottomCenter
-                                                              , 
+                                                          alignment: Alignment
+                                                              .bottomCenter,
                                                           child: Text(
                                                             "\$${product.price.toStringAsFixed(2)}",
                                                             style: TextStyle(

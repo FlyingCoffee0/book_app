@@ -29,45 +29,112 @@ class BestSellerScreen extends ConsumerWidget {
           if (products.isEmpty) {
             return Center(child: Text("No products found"));
           }
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.75,
-            ),
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BookDetailsScreen(product: product),
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.70,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
                     ),
-                  );
-                },
-                child: Card(
-                  child: Column(
-                    children: [
-                      FutureBuilder<String?>(
-                        future: product.coverImage,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError || snapshot.data == null) {
-                            return Icon(Icons.image_not_supported, size: 100);
-                          } else {
-                            return Image.network(snapshot.data!, height: 100, fit: BoxFit.cover);
-                          }
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  BookDetailsScreen(product: product),
+                            ),
+                          );
                         },
-                      ),
-                      Text(product.name),
-                      Text("\$${product.price.toStringAsFixed(2)}"),
-                    ],
+                        child: Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                // Product image
+                                Container(
+                                  height: 200,
+                                  width: double.infinity,
+                                  child: FutureBuilder<String?>(
+                                    future: product.coverImage,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError ||
+                                          snapshot.data == null) {
+                                        return Center(
+                                            child: Icon(Icons.image_not_supported,
+                                                size: 100));
+                                      } else {
+                                        return ClipRRect(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(16)),
+                                          child: Image.network(
+                                            snapshot.data!,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ),
+                                // Product Name and Price
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          product.name,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center, // Center the text
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "\$${product.price.toStringAsFixed(2)}",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF6251DD),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              );
-            },
+              ],
+            ),
           );
         },
         loading: () => Center(child: CircularProgressIndicator()),

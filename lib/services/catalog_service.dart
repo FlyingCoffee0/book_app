@@ -77,7 +77,7 @@ Future<List<Product>> getProductsByCategory(int categoryId) async {
     print("API Response for products: ${response.data}");
 
     // 'products' anahtarını kontrol et
-    final List? data = response.data["products"];
+    final List? data = response.data["product"];
     if (data == null) {
       throw "No products found for category $categoryId. Response: ${response.data}";
     }
@@ -116,7 +116,7 @@ Future<void> addToFavorites(int userId, int productId) async {
 Future<List<Product>> getAllProducts() async {
   try {
     final response = await _apiService.get("products/all"); 
-    final List? data = response.data["products"];
+    final List? data = response.data["product"];
     if (data == null) throw "No products found";
     return data.map((json) => Product.fromJson(json)).toList();
   } catch (e) {
