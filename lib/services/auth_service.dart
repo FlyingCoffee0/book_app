@@ -5,15 +5,17 @@ import 'package:piton_books/providers/providers.dart';
 import '../services/api_service.dart';
 
 // Riverpod provider tanımı
-final authServiceProvider = Provider<AuthService>(
-  (ref) => AuthService(ref.read(apiServiceProvider)),
-);
+final authServiceProvider = Provider<AuthService>((ref) {
+  final apiService = ref.read(apiServiceProvider);
+  final secureStorage = ref.read(secureStorageProvider);
+  return AuthService(apiService, secureStorage); // İki parametreyi sağlıyoruz
+});
 
 class AuthService {
   final ApiService _apiService;
-  final _storage = FlutterSecureStorage();
+  final FlutterSecureStorage _storage;
 
-  AuthService(this._apiService);
+  AuthService(this._apiService, this._storage);
 
   // Kullanıcı kayıt olma
   Future<void> register(String name, String email, String password) async {

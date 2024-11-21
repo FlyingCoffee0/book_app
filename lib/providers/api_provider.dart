@@ -11,7 +11,7 @@ final getIt = GetIt.instance;
 void setupDependencies() {
   getIt.registerLazySingleton(() => Dio());
   getIt.registerLazySingleton(() => ApiService(getIt<Dio>()));
-  getIt.registerLazySingleton(() => AuthService(getIt<ApiService>()));
+  
   getIt.registerLazySingleton(() => StorageService()); 
   getIt.registerLazySingleton(() => CatalogService(getIt<ApiService>(), getIt<StorageService>()));
   getIt.registerLazySingleton(() => ImageService(getIt<Dio>()));

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
@@ -15,10 +16,14 @@ final apiServiceProvider = Provider<ApiService>((ref) {
   return ApiService(dio);
 });
 
+// FlutterSecureStorage Provider
+final secureStorageProvider = Provider<FlutterSecureStorage>((ref) => FlutterSecureStorage());
+
 // AuthService Provider
 final authServiceProvider = Provider<AuthService>((ref) {
   final apiService = ref.read(apiServiceProvider);
-  return AuthService(apiService);
+  final secureStorage = ref.read(secureStorageProvider);
+  return AuthService(apiService, secureStorage);
 });
 
 // StorageService Provider
