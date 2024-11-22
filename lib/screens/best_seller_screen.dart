@@ -98,7 +98,7 @@ class BestSellerScreen extends ConsumerWidget {
                                   child: Column(
                                     children: [
                                       Align(
-                                        alignment: Alignment.center,
+                                        alignment: Alignment.bottomLeft,
                                         child: Text(
                                           product.name,
                                           style: TextStyle(
@@ -108,12 +108,12 @@ class BestSellerScreen extends ConsumerWidget {
                                           ),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center, // Center the text
+                                          textAlign: TextAlign.center, 
                                         ),
                                       ),
                                       SizedBox(height: 4),
                                       Align(
-                                        alignment: Alignment.center,
+                                        alignment: Alignment.bottomRight,
                                         child: Text(
                                           "\$${product.price.toStringAsFixed(2)}",
                                           style: TextStyle(

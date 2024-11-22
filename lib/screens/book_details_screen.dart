@@ -21,13 +21,54 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Book Details"),
+        title: Align(
+          alignment: Alignment.centerRight,
+          child: Text("Book Details"),
+        ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: CircleAvatar(
+                backgroundColor: Color(0xFFF4F4FF),
+                radius: 25,
+                child: IconButton(
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: Color(0xFF6251DD),
+                    size: 30,
+                  ),
+                  onPressed: () async {
+                    setState(() {
+                      isFavorite = !isFavorite;
+                    });
+                    try {
+                      if (isFavorite) {
+                        await catalogService.addToFavorites(
+                            1, widget.product.id);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Added to favorites!")),
+                        );
+                      } else {
+                        await catalogService.removeFromFavorites(
+                            1, widget.product.id);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Removed from favorites!")),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Error: $e")),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
             // Kapak görselini dinamik olarak yükleme
             Center(
               child: FutureBuilder<String?>(
@@ -40,7 +81,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
                   } else {
                     return Image.network(
                       snapshot.data!,
-                      height: 200,
+                      height: 250,
                       fit: BoxFit.cover,
                     );
                   }
@@ -48,83 +89,92 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
               ),
             ),
             SizedBox(height: 20),
-            Text(
-              widget.product.name,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            // Ürün ismi
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                widget.product.name,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(height: 10),
-            Text(
-              "\$${widget.product.price.toStringAsFixed(2)}",
-              style: TextStyle(fontSize: 20, color: Colors.green),
-            ),
-            SizedBox(height: 20),
+            // Özet Başlığı
             Text(
               "Summary",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
+            // Ürün açıklaması
             FutureBuilder<String?>(
-  future: Future.value(widget.product.description), // Ürün açıklamasını doğrudan kullanıyoruz
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return CircularProgressIndicator();
-    } else if (snapshot.hasError || snapshot.data == null || snapshot.data!.isEmpty) {
-      return Text(
-        "Summary not available.",
-        style: TextStyle(fontSize: 16),
-      );
-    } else {
-      return Text(
-        snapshot.data!,
-        style: TextStyle(fontSize: 16),
-      );
-    }
-  },
-),
-
-            Spacer(),
-            // Favori ve satın alma butonları
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorite ? Colors.red : Colors.grey,
-                    size: 30,
+              future: Future.value(widget.product
+                  .description), 
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError ||
+                    snapshot.data == null ||
+                    snapshot.data!.isEmpty) {
+                  return Text(
+                    "Summary not available.",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xA6090937),
+                    ),
+                  );
+                } else {
+                  return Text(
+                    snapshot.data!,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xA6090937),
+                    ),
+                  );
+                }
+              },
+            ),
+            SizedBox(height: 30),
+            // Satın alma butonu
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Color(0xFFFF7A59),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text("Purchase functionality coming soon!")),
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      "\$${widget.product.price.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  onPressed: () async {
-                    setState(() {
-                      isFavorite = !isFavorite;
-                    });
-                    try {
-                      if (isFavorite) {
-                        await catalogService.addToFavorites(1, widget.product.id);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Added to favorites!")),
-                        );
-                      } else {
-                        await catalogService.removeFromFavorites(1, widget.product.id);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Removed from favorites!")),
-                        );
-                      }
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Error: $e")),
-                      );
-                    }
-                  },
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Purchase functionality coming soon!")),
-                    );
-                  },
-                  child: Text("Buy Now"),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Text(
+                      "Buy Now",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
