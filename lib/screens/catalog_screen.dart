@@ -3,29 +3,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/catalog_search_provider.dart';
 import 'best_seller_screen.dart';
 import 'book_details_screen.dart';
+import '../providers/navigation_provider.dart'; 
+import 'package:easy_localization/easy_localization.dart';  
 
 class CatalogScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchQuery = ref.watch(categorySearchQueryProvider); 
+    final searchQuery = ref.watch(categorySearchQueryProvider);
     final filteredCategories = ref.watch(filteredCategoriesProvider);
+    final navigationNotifier = ref.read(navigationProvider.notifier); 
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF2C2C54), // AppBar arka planı
+        backgroundColor: Color(0xFFFFFFFF), 
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Logo sol tarafa yerleştirildi
             Image.asset(
-              'assets/logo.png', // Logo dosyanızın yolu
-              width: 40, // Boyutunu ayarlayabilirsiniz
-              height: 40, // Boyutunu ayarlayabilirsiniz
+              'assets/logo.png', 
+              width: 40, 
+              height: 40, 
             ),
-            // Catalog metni sağda olacak
             Text(
-              "Catalog",
+              "catalog".tr(),  
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            // Dil değiştirme butonu eklendi
+            IconButton(
+              icon: Icon(Icons.language),
+              onPressed: () {
+                context.locale = context.locale == Locale('en') ? Locale('tr') : Locale('en');
+              },
             ),
           ],
         ),
@@ -44,12 +52,9 @@ class CatalogScreen extends ConsumerWidget {
                     children: categories.map((category) {
                       return GestureDetector(
                         onTap: () {
-                          Navigator.push(
+                          navigationNotifier.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  BestSellerScreen(categoryId: category.id),
-                            ),
+                            BestSellerScreen(categoryId: category.id), 
                           );
                         },
                         child: Container(
@@ -79,7 +84,7 @@ class CatalogScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               decoration: InputDecoration(
-                hintText: "Search categories ...",
+                hintText: "search_categories".tr(), 
                 hintStyle: TextStyle(color: Color(0x66090937)),
                 prefixIcon: Icon(Icons.search),
                 filled: true,
@@ -98,8 +103,7 @@ class CatalogScreen extends ConsumerWidget {
                 ),
               ),
               onChanged: (value) {
-                ref.read(categorySearchQueryProvider.notifier).state =
-                    value; // Search query for categories
+                ref.read(categorySearchQueryProvider.notifier).state = value; 
               },
             ),
           ),
@@ -112,11 +116,8 @@ class CatalogScreen extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final category = categories[index];
 
-                    // If category name doesn't match search query, don't display it
-                    if (!category.name
-                        .toLowerCase()
-                        .contains(searchQuery.toLowerCase())) {
-                      return Container(); // Skip category if it doesn't match search
+                    if (!category.name.toLowerCase().contains(searchQuery.toLowerCase())) {
+                      return Container(); 
                     }
 
                     return Padding(
@@ -124,34 +125,27 @@ class CatalogScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Category Header with "View All"
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 category.name,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.push(
+                                  navigationNotifier.push(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) => BestSellerScreen(categoryId: category.id),
-                                    ),
+                                    BestSellerScreen(categoryId: category.id), 
                                   );
                                 },
                                 style: TextButton.styleFrom(
                                   foregroundColor: Color(0xFFEF6B4A),
                                 ),
-                                child: Text("View All"),
+                                child: Text("view_all".tr()), 
                               ),
                             ],
                           ),
-                          // Books in the Category
                           Consumer(
                             builder: (context, ref, child) {
                               final products = ref.watch(filteredProductsProvider(category.id));
@@ -166,12 +160,9 @@ class CatalogScreen extends ConsumerWidget {
                                         final product = products[productIndex];
                                         return GestureDetector(
                                           onTap: () {
-                                            Navigator.push(
+                                            navigationNotifier.push(
                                               context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BookDetailsScreen(product: product),
-                                              ),
+                                              BookDetailsScreen(product: product), 
                                             );
                                           },
                                           child: Container(
@@ -181,7 +172,6 @@ class CatalogScreen extends ConsumerWidget {
                                               elevation: 3,
                                               child: Row(
                                                 children: [
-                                                  // Book image 
                                                   FutureBuilder<String?>(
                                                     future: product.coverImage,
                                                     builder: (context, snapshot) {
@@ -207,7 +197,6 @@ class CatalogScreen extends ConsumerWidget {
                                                       }
                                                     },
                                                   ),
-                                                  // Book name, author, and price
                                                   Padding(
                                                     padding: const EdgeInsets.all(16.0),
                                                     child: Column(

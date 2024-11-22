@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/catalog_search_provider.dart';
 import 'book_details_screen.dart';
+import '../providers/navigation_provider.dart';
+import 'package:easy_localization/easy_localization.dart'; 
 
 class BestSellerScreen extends ConsumerWidget {
   final int categoryId;
@@ -18,12 +20,12 @@ class BestSellerScreen extends ConsumerWidget {
         title: Align(
           alignment: Alignment.centerRight,
           child: Text(
-            'Best Seller',
+            "best_seller".tr(),  
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         elevation: 0,
-        backgroundColor: Colors.transparent, // To make AppBar background transparent
+        backgroundColor: Colors.transparent,
       ),
       body: Column(
         children: [
@@ -33,11 +35,11 @@ class BestSellerScreen extends ConsumerWidget {
             child: TextField(
               onChanged: (value) => ref.read(searchQueryProvider.notifier).state = value,
               decoration: InputDecoration(
-                hintText: "Search products...",
-                hintStyle: TextStyle(color: Color(0x66090937)), // Hint text style
-                prefixIcon: Icon(Icons.search, color: Color(0x66090937)), // Search icon color
+                hintText: "search_products".tr(),  
+                hintStyle: TextStyle(color: Color(0x66090937)),
+                prefixIcon: Icon(Icons.search, color: Color(0x66090937)),
                 filled: true,
-                fillColor: Color(0xFFF4F4FF), // Background color of the text field
+                fillColor: Color(0xFFF4F4FF),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
@@ -58,7 +60,7 @@ class BestSellerScreen extends ConsumerWidget {
             child: filteredProducts.when(
               data: (products) {
                 if (products.isEmpty) {
-                  return Center(child: Text("No products found"));
+                  return Center(child: Text("no_products_found".tr()));  
                 }
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -73,12 +75,10 @@ class BestSellerScreen extends ConsumerWidget {
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () {                   
+                          ref.read(navigationProvider.notifier).push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => BookDetailsScreen(product: product),
-                            ),
+                            BookDetailsScreen(product: product),
                           );
                         },
                         child: Card(

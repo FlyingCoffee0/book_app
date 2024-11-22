@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/product_model.dart';
 import '../providers/catalog_provider.dart';
+import 'package:easy_localization/easy_localization.dart'; 
 
 class BookDetailsScreen extends ConsumerStatefulWidget {
   final Product product;
@@ -23,7 +24,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
       appBar: AppBar(
         title: Align(
           alignment: Alignment.centerRight,
-          child: Text("Book Details"),
+          child: Text("book_details".tr()),  
         ),
       ),
       body: SingleChildScrollView(
@@ -51,18 +52,18 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
                         await catalogService.addToFavorites(
                             1, widget.product.id);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Added to favorites!")),
+                          SnackBar(content: Text("added_to_favorites".tr())),  
                         );
                       } else {
                         await catalogService.removeFromFavorites(
                             1, widget.product.id);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Removed from favorites!")),
+                          SnackBar(content: Text("removed_from_favorites".tr())),  
                         );
                       }
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Error: $e")),
+                        SnackBar(content: Text("error: $e".tr())),  
                       );
                     }
                   },
@@ -71,7 +72,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
             ),
             // Kapak görselini dinamik olarak yükleme
             Center(
-              child: FutureBuilder<String?>( 
+              child: FutureBuilder<String?>(
                 future: Product.fetchImageUrl(widget.product.fileName),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -114,7 +115,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
             SizedBox(height: 10),
             // Özet Başlığı
             Text(
-              "Summary",
+              "summary".tr(),  
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
@@ -128,7 +129,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
                     snapshot.data == null ||
                     snapshot.data!.isEmpty) {
                   return Text(
-                    "Summary not available.",
+                    "summary_not_available".tr(),  
                     style: TextStyle(
                       fontSize: 16,
                       color: Color(0xA6090937),
@@ -157,8 +158,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
               ),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text("Purchase functionality coming soon!")),
+                  SnackBar(content: Text("purchase_functionality_coming_soon".tr())),  
                 );
               },
               child: Row(
@@ -178,7 +178,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 16.0),
                     child: Text(
-                      "Buy Now",
+                      "buy_now".tr(),  
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,

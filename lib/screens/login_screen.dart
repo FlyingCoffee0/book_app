@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import 'register_screen.dart';
 import 'catalog_screen.dart';
+import '../providers/navigation_provider.dart';  
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   @override
@@ -19,6 +21,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
+    final navigationNotifier = ref.read(navigationProvider.notifier);  
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -40,7 +43,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         SizedBox(height: 20),
                         Text(
-                          "Welcome back!",
+                          tr('welcome_back'),
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -49,7 +52,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "Login to your account",
+                          tr('login_title'),
                           style: TextStyle(
                             fontSize: 24,
                             color: Color(0xFF090937),
@@ -60,7 +63,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   SizedBox(height: 40),
                   Text(
-                    "E-mail",
+                    tr('email'),
                     style: TextStyle(
                       fontSize: 14,
                       color: Color(0xFF090937),
@@ -82,17 +85,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: TextStyle(color: Colors.black),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please enter your email";
+                        return tr('please_enter_email');
                       } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
                           .hasMatch(value)) {
-                        return "Please enter a valid email";
+                        return tr('please_enter_valid_email');
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "Password",
+                    tr('password'),
                     style: TextStyle(
                       fontSize: 14,
                       color: Color(0xFF090937),
@@ -115,9 +118,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: TextStyle(color: Colors.black),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please enter your password";
+                        return tr('please_enter_password');
                       } else if (value.length < 6 || value.length > 20) {
-                        return "Password must be 6-20 characters";
+                        return tr('password_length');
                       }
                       return null;
                     },
@@ -139,22 +142,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             checkColor: Colors.white,
                           ),
                           Text(
-                            "Remember Me",
+                            tr('remember_me'),
                             style: TextStyle(color: Color(0xFF6251DD)),
                           ),
                         ],
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
+                          navigationNotifier.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => RegisterScreen(),
-                            ),
+                            RegisterScreen(),
                           );
                         },
                         child: Text(
-                          "Register",
+                          tr('register'),
                           style: TextStyle(color: Color(0xFF6C63FF)),
                         ),
                       ),
@@ -168,17 +169,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                _login(authNotifier);
+                                _login(authNotifier, navigationNotifier);
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 16), backgroundColor: Color(0xFFFF7A59),
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              backgroundColor: Color(0xFFFF7A59),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                             child: Text(
-                              "Login",
+                              tr('login_button'),
                               style: TextStyle(fontSize: 18, color: Colors.white),
                             ),
                           ),
@@ -192,7 +194,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Future<void> _login(AuthNotifier authNotifier) async {
+  Future<void> _login(AuthNotifier authNotifier, NavigationNotifier navigationNotifier) async {
     try {
       await authNotifier.login(
         email: _emailController.text,
@@ -200,11 +202,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         rememberMe: _rememberMe,
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login successful!")),
+        SnackBar(content: Text(tr('login_successful'))),
       );
-      Navigator.pushReplacement(
+      navigationNotifier.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => CatalogScreen()),
+        CatalogScreen(),
       );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(

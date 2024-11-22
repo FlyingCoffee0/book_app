@@ -32,8 +32,8 @@ void main() {
   group('Filtered Categories Provider', () {
     test('filteredCategoriesProvider filters categories correctly', () async {
       final categories = [
-        Category(id: 1, name: "Programming"),
-        Category(id: 2, name: "Cooking"),
+        Category(id: 1, name: "Best Seller"),
+        Category(id: 2, name: "Classics"),
         Category(id: 3, name: "Photography"),
       ];
 

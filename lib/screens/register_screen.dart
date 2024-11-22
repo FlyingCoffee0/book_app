@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import 'login_screen.dart';
+import '../providers/navigation_provider.dart';  
+import 'package:easy_localization/easy_localization.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   @override
@@ -12,14 +14,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
-
+    final navigationNotifier = ref.read(navigationProvider.notifier);  
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -40,7 +41,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                         SizedBox(height: 20),
                         Text(
-                          "Welcome",
+                          tr('welcome'),
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -49,7 +50,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "Register an account",
+                          tr('register_title'),
                           style: TextStyle(
                             fontSize: 24,
                             color: Color(0xFF090937),
@@ -60,7 +61,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   SizedBox(height: 40),
                   Text(
-                    "Name",
+                    tr('name'),
                     style: TextStyle(
                       fontSize: 14,
                       color: Color(0xFF090937),
@@ -82,14 +83,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     style: TextStyle(color: Colors.black),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please enter your name";
+                        return tr('please_enter_name');
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "E-mail",
+                    tr('email'),
                     style: TextStyle(
                       fontSize: 14,
                       color: Color(0xFF090937),
@@ -111,17 +112,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     style: TextStyle(color: Colors.black),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please enter your email";
+                        return tr('please_enter_email');
                       } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
                           .hasMatch(value)) {
-                        return "Please enter a valid email";
+                        return tr('please_enter_valid_email');
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "Password",
+                    tr('password'),
                     style: TextStyle(
                       fontSize: 14,
                       color: Color(0xFF090937),
@@ -144,9 +145,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     style: TextStyle(color: Colors.black),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Please enter your password";
+                        return tr('please_enter_password');
                       } else if (value.length < 6 || value.length > 20) {
-                        return "Password must be 6-20 characters";
+                        return tr('password_length');
                       }
                       return null;
                     },
@@ -156,15 +157,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
+                        navigationNotifier.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
+                          LoginScreen(),
                         );
                       },
                       child: Text(
-                        "Login",
+                        tr('login'),
                         style: TextStyle(color: Color(0xFF6C63FF)),
                       ),
                     ),
@@ -177,7 +176,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                _register();
+                                _register(navigationNotifier);
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -188,7 +187,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               ),
                             ),
                             child: Text(
-                              "Register",
+                              tr('register_button'),
                               style:
                                   TextStyle(fontSize: 18, color: Colors.white),
                             ),
@@ -203,7 +202,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     );
   }
 
-  Future<void> _register() async {
+  Future<void> _register(NavigationNotifier navigationNotifier) async {
     try {
       await ref.read(authProvider.notifier).register(
             name: _nameController.text,
@@ -211,11 +210,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             password: _passwordController.text,
           );
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registration successful!")),
+        SnackBar(content: Text(tr('register_successful'))),
       );
-      Navigator.pushReplacement(
+      navigationNotifier.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        LoginScreen(),
       );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
