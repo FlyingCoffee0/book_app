@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/product_model.dart';
 import '../providers/catalog_provider.dart';
-import 'package:easy_localization/easy_localization.dart'; 
+import 'package:easy_localization/easy_localization.dart';
 
 class BookDetailsScreen extends ConsumerStatefulWidget {
   final Product product;
@@ -73,7 +73,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
             // Kapak görselini dinamik olarak yükleme
             Center(
               child: FutureBuilder<String?>(
-                future: Product.fetchImageUrl(widget.product.fileName),
+                future: widget.product.coverImage, 
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();

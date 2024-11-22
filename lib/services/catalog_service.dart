@@ -109,7 +109,7 @@ Future<void> addToFavorites(int userId, int productId) async {
     print("addToFavorites successful: ${response.data}");
   } catch (e) {
     print("addToFavorites error: $e");
-    throw e; // Hatanın yukarıya iletilmesi
+    throw e; 
   }
 }
 
@@ -162,8 +162,17 @@ Future<Product> getProductById(int productId) async {
   if (data == null) {
     throw "Product not found.";
   }
+  // Ürün fotoğrafı URL'sini kontrol et, cache'le
+  String? imageUrl = data["cover_image"];
+  if (imageUrl != null) {
+    
+  }
+
   return Product.fromJson(data);
+  
 }
+
+
 
 
 }

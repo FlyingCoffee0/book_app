@@ -94,7 +94,7 @@ class BestSellerScreen extends ConsumerWidget {
                                   height: 200,
                                   width: double.infinity,
                                   child: FutureBuilder<String?>(
-                                    future: product.coverImage,
+                                    future: product.coverImage, // Cover image getter
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState == ConnectionState.waiting) {
                                         return Center(child: CircularProgressIndicator());

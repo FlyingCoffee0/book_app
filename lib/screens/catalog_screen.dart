@@ -3,32 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/catalog_search_provider.dart';
 import 'best_seller_screen.dart';
 import 'book_details_screen.dart';
-import '../providers/navigation_provider.dart'; 
-import 'package:easy_localization/easy_localization.dart';  
+import '../providers/navigation_provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 
 class CatalogScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchQuery = ref.watch(categorySearchQueryProvider);
     final filteredCategories = ref.watch(filteredCategoriesProvider);
-    final navigationNotifier = ref.read(navigationProvider.notifier); 
+    final navigationNotifier = ref.read(navigationProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFFFFFFF), 
+        backgroundColor: Color(0xFFFFFFFF),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.asset(
-              'assets/logo.png', 
-              width: 40, 
-              height: 40, 
+              'assets/logo.png',
+              width: 40,
+              height: 40,
             ),
             Text(
-              "catalog".tr(),  
+              "catalog".tr(),
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            // Dil değiştirme butonu eklendi
+            // Language Change Button
             IconButton(
               icon: Icon(Icons.language),
               onPressed: () {
@@ -54,7 +55,7 @@ class CatalogScreen extends ConsumerWidget {
                         onTap: () {
                           navigationNotifier.push(
                             context,
-                            BestSellerScreen(categoryId: category.id), 
+                            BestSellerScreen(categoryId: category.id),
                           );
                         },
                         child: Container(
@@ -84,7 +85,7 @@ class CatalogScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               decoration: InputDecoration(
-                hintText: "search_categories".tr(), 
+                hintText: "search_categories".tr(),
                 hintStyle: TextStyle(color: Color(0x66090937)),
                 prefixIcon: Icon(Icons.search),
                 filled: true,
@@ -103,7 +104,7 @@ class CatalogScreen extends ConsumerWidget {
                 ),
               ),
               onChanged: (value) {
-                ref.read(categorySearchQueryProvider.notifier).state = value; 
+                ref.read(categorySearchQueryProvider.notifier).state = value;
               },
             ),
           ),
@@ -117,7 +118,7 @@ class CatalogScreen extends ConsumerWidget {
                     final category = categories[index];
 
                     if (!category.name.toLowerCase().contains(searchQuery.toLowerCase())) {
-                      return Container(); 
+                      return Container();
                     }
 
                     return Padding(
@@ -136,13 +137,13 @@ class CatalogScreen extends ConsumerWidget {
                                 onPressed: () {
                                   navigationNotifier.push(
                                     context,
-                                    BestSellerScreen(categoryId: category.id), 
+                                    BestSellerScreen(categoryId: category.id),
                                   );
                                 },
                                 style: TextButton.styleFrom(
                                   foregroundColor: Color(0xFFEF6B4A),
                                 ),
-                                child: Text("view_all".tr()), 
+                                child: Text("view_all".tr()),
                               ),
                             ],
                           ),
@@ -162,7 +163,7 @@ class CatalogScreen extends ConsumerWidget {
                                           onTap: () {
                                             navigationNotifier.push(
                                               context,
-                                              BookDetailsScreen(product: product), 
+                                              BookDetailsScreen(product: product),
                                             );
                                           },
                                           child: Container(
@@ -172,8 +173,9 @@ class CatalogScreen extends ConsumerWidget {
                                               elevation: 3,
                                               child: Row(
                                                 children: [
+                                                  // Image loaded using FutureBuilder
                                                   FutureBuilder<String?>(
-                                                    future: product.coverImage,
+                                                    future: product.coverImage, // Using the coverImage getter
                                                     builder: (context, snapshot) {
                                                       if (snapshot.connectionState == ConnectionState.waiting) {
                                                         return SizedBox(
