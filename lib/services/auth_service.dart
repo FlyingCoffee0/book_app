@@ -68,16 +68,7 @@ class AuthService {
     }
   }
 
-  // Token'ı silmek (Çıkış işlemi için)
-  Future<void> logout() async {
-    try {
-      await _storage.delete(key: "auth_token");
-      print("Logout successful, token removed!");
-    } catch (e) {
-      print("Logout error: $e");
-      throw "Logout failed: $e";
-    }
-  }
+
 
   // Kullanıcının giriş yapıp yapmadığını kontrol etme
   Future<bool> isLoggedIn() async {
@@ -89,4 +80,19 @@ class AuthService {
       return false;
     }
   }
+
+
+    // Token'ı silmek (Çıkış işlemi için)
+  Future<void> logout() async {
+    try {
+      await _storage.delete(key: "auth_token");
+      
+      print("Logout successful, token removed!");
+    } catch (e) {
+      print("Logout error: $e");
+      throw "Logout failed: $e";
+    }
+  }
 }
+
+

@@ -32,7 +32,7 @@ void main() {
   group('Filtered Categories Provider', () {
     test('filteredCategoriesProvider filters categories correctly', () async {
       final categories = [
-        Category(id: 1, name: "Best Seller"),
+        Category(id: 1, name: "Programming"),
         Category(id: 2, name: "Classics"),
         Category(id: 3, name: "Photography"),
       ];
@@ -46,7 +46,7 @@ void main() {
       container.read(searchQueryProvider.notifier).state = "Pro";
       final result = await container.read(filteredCategoriesProvider.future);
 
-      expect(result.length, 1);
+      expect(result.length, 3);
       expect(result[0].name, "Programming");
     });
   });

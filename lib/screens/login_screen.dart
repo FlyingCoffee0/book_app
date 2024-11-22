@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:piton_books/services/local_auth_service.dart';
 import '../providers/auth_provider.dart';
 import 'register_screen.dart';
 import 'catalog_screen.dart';
@@ -16,6 +17,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _rememberMe = false;
   final _formKey = GlobalKey<FormState>();
+  final _biometricAuthService = BiometricAuthService(); 
 
   @override
   Widget build(BuildContext context) {
@@ -197,6 +199,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           ),
                         ),
+                  SizedBox(height: 20),
+                  // Biometric login button
+                  ElevatedButton(
+                    onPressed: () async {
+                      bool isAuthenticated = await _biometricAuthService.authenticateWithBiometrics();
+                      if (isAuthenticated) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Authenticated successfully")));
+                        // Proceed to next screen after successful authentication
+                        navigationNotifier.pushReplacement(
+                          context,
+                          CatalogScreen(),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Authentication failed")));
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 16,horizontal: 92,),
+                      backgroundColor: Color(0xFF6251DD), 
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      "Login with Biometrics",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
                 ],
               ),
             ),
