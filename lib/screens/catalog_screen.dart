@@ -8,7 +8,7 @@ class CatalogScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchQuery =
-        ref.watch(categorySearchQueryProvider); // Kategori ismi üzerinden arama
+        ref.watch(categorySearchQueryProvider); 
     final filteredCategories = ref.watch(filteredCategoriesProvider);
 
     return Scaffold(

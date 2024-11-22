@@ -15,25 +15,53 @@ class BestSellerScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          decoration: InputDecoration(
-            hintText: "Search products...",
-            border: InputBorder.none,
-            prefixIcon: Icon(Icons.search),
+        title: Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            'Best Seller',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          onChanged: (value) => ref.read(searchQueryProvider.notifier).state = value,
         ),
+        elevation: 0,
+        backgroundColor: Colors.transparent, // To make AppBar background transparent
       ),
-      body: filteredProducts.when(
-        data: (products) {
-          if (products.isEmpty) {
-            return Center(child: Text("No products found"));
-          }
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Expanded(
+      body: Column(
+        children: [
+          // Search Filter outside of AppBar
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              onChanged: (value) => ref.read(searchQueryProvider.notifier).state = value,
+              decoration: InputDecoration(
+                hintText: "Search products...",
+                hintStyle: TextStyle(color: Color(0x66090937)), // Hint text style
+                prefixIcon: Icon(Icons.search, color: Color(0x66090937)), // Search icon color
+                filled: true,
+                fillColor: Color(0xFFF4F4FF), // Background color of the text field
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(color: Color(0x66090937), width: 1.5),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+              ),
+            ),
+          ),
+          // Displaying filtered products
+          Expanded(
+            child: filteredProducts.when(
+              data: (products) {
+                if (products.isEmpty) {
+                  return Center(child: Text("No products found"));
+                }
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -49,8 +77,7 @@ class BestSellerScreen extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  BookDetailsScreen(product: product),
+                              builder: (context) => BookDetailsScreen(product: product),
                             ),
                           );
                         },
@@ -69,19 +96,13 @@ class BestSellerScreen extends ConsumerWidget {
                                   child: FutureBuilder<String?>(
                                     future: product.coverImage,
                                     builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      } else if (snapshot.hasError ||
-                                          snapshot.data == null) {
-                                        return Center(
-                                            child: Icon(Icons.image_not_supported,
-                                                size: 100));
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return Center(child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError || snapshot.data == null) {
+                                        return Center(child: Icon(Icons.image_not_supported, size: 100));
                                       } else {
                                         return ClipRRect(
-                                          borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(16)),
+                                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                                           child: Image.network(
                                             snapshot.data!,
                                             fit: BoxFit.cover,
@@ -102,13 +123,13 @@ class BestSellerScreen extends ConsumerWidget {
                                         child: Text(
                                           product.name,
                                           style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 10,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
                                           ),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center, 
+                                          textAlign: TextAlign.center,
                                         ),
                                       ),
                                       SizedBox(height: 4),
@@ -117,7 +138,7 @@ class BestSellerScreen extends ConsumerWidget {
                                         child: Text(
                                           "\$${product.price.toStringAsFixed(2)}",
                                           style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 14,
                                             color: Color(0xFF6251DD),
                                           ),
                                         ),
@@ -132,13 +153,13 @@ class BestSellerScreen extends ConsumerWidget {
                       );
                     },
                   ),
-                ),
-              ],
+                );
+              },
+              loading: () => Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(child: Text("Error: $error")),
             ),
-          );
-        },
-        loading: () => Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text("Error: $error")),
+          ),
+        ],
       ),
     );
   }
