@@ -35,7 +35,7 @@ void main() {
       when(mockStorage.write(key: anyNamed('key'), value: anyNamed('value')))
           .thenAnswer((_) async => null);
 
-      await authService.login("test@example.com", "password123");
+      await authService.login("test@example.com", "password123", false);
 
       // Doğru API çağrısı yapıldığını doğrula
       verify(mockApiService.post("login", {
@@ -75,7 +75,7 @@ void main() {
       ));
 
       expect(
-        () => authService.login("wrong@example.com", "wrongpassword"),
+        () => authService.login("wrong@example.com", "wrongpassword",false),
         throwsA(predicate((e) => e.toString().contains("Invalid credentials"))),
       );
     });

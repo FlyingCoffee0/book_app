@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piton_books/providers/providers.dart' as providers;
+import 'package:piton_books/providers/providers.dart';
 import '../services/auth_service.dart';
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
   (ref) => AuthNotifier(ref),
@@ -18,7 +19,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true);
     try {
       final authService = _ref.read(authServiceProvider);
-      await authService.login(email, password);
+      await authService.login(email, password,rememberMe);
       state = state.copyWith(isLoading: false, isLoggedIn: true);
     } catch (error) {
       state = state.copyWith(isLoading: false, errorMessage: error.toString());

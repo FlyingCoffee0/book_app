@@ -1,15 +1,5 @@
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:piton_books/providers/providers.dart';
-import '../services/api_service.dart';
-
-// Riverpod provider tanımı
-final authServiceProvider = Provider<AuthService>((ref) {
-  final apiService = ref.read(apiServiceProvider);
-  final secureStorage = ref.read(secureStorageProvider);
-  return AuthService(apiService, secureStorage); 
-});
+import 'package:piton_books/services/api_service.dart';
 
 class AuthService {
   final ApiService _apiService;
@@ -36,7 +26,7 @@ class AuthService {
   }
 
   // Kullanıcı giriş yapma
-  Future<void> login(String email, String password) async {
+  Future<void> login(String email, String password, bool rememberMe) async {
     try {
       final response = await _apiService.post(
         "login",
@@ -47,7 +37,10 @@ class AuthService {
       );
       final token = response.data["action_login"]?["token"];
       if (token != null) {
-        await _storage.write(key: "auth_token", value: token);
+        await _storage.write(key: "auth_token", value: token); 
+        if (rememberMe) {
+          await _storage.write(key: "remember_me", value: "true"); // Remember me bilgisi kaydetme
+        }
         print("Login successful, token saved!");
       } else {
         throw "Login failed, no token received!";
@@ -68,8 +61,6 @@ class AuthService {
     }
   }
 
-
-
   // Kullanıcının giriş yapıp yapmadığını kontrol etme
   Future<bool> isLoggedIn() async {
     try {
@@ -81,12 +72,21 @@ class AuthService {
     }
   }
 
+  // Remember me kontrolü
+  Future<bool> isRememberMe() async {
+    try {
+      final rememberMe = await _storage.read(key: "remember_me");
+      return rememberMe == "true";
+    } catch (e) {
+      return false;
+    }
+  }
 
-    // Token'ı silmek (Çıkış işlemi için)
+  // Token'ı silmek (Çıkış işlemi için)
   Future<void> logout() async {
     try {
       await _storage.delete(key: "auth_token");
-      
+      await _storage.delete(key: "remember_me"); // Remember me bilgisini de siliyoruz
       print("Logout successful, token removed!");
     } catch (e) {
       print("Logout error: $e");
@@ -94,5 +94,3 @@ class AuthService {
     }
   }
 }
-
-

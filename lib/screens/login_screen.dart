@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:piton_books/providers/providers.dart';
 import 'package:piton_books/services/local_auth_service.dart';
 import '../providers/auth_provider.dart';
 import 'register_screen.dart';
@@ -18,6 +19,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _rememberMe = false;
   final _formKey = GlobalKey<FormState>();
   final _biometricAuthService = BiometricAuthService(); 
+
+  @override
+  void initState() {
+    super.initState();
+    _checkRememberMe();
+  }
+
+  Future<void> _checkRememberMe() async {
+    final authService = ref.read(authServiceProvider);
+    final rememberMe = await authService.isRememberMe();
+    if (rememberMe) {
+      final token = await authService.getToken();
+      if (token != null) {
+        final navigationNotifier = ref.read(navigationProvider.notifier);
+        navigationNotifier.pushReplacement(context, CatalogScreen());
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +225,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       bool isAuthenticated = await _biometricAuthService.authenticateWithBiometrics();
                       if (isAuthenticated) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Authenticated successfully")));
-                        // Proceed to next screen after successful authentication
+                       
                         navigationNotifier.pushReplacement(
                           context,
                           CatalogScreen(),
