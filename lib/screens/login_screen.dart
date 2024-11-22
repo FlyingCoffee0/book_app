@@ -41,21 +41,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           'assets/MidLogo.png', 
                           height: 100,
                         ),
-                        SizedBox(height: 20),
-                        Text(
-                          tr('welcome_back'),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0x99090937),
+                        SizedBox(height: 60),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: Text(
+                              tr('welcome_back'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0x99090937),
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(height: 10),
-                        Text(
-                          tr('login_title'),
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Color(0xFF090937),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: Text(
+                              tr('login_title'),
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Color(0xFF090937),
+                              ),
+                            ),
                           ),
                         ),
                       ],

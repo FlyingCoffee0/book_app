@@ -40,20 +40,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           height: 100,
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          tr('welcome'),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0x99090937),
+                        Align(
+                          alignment: Alignment.centerLeft, 
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: Text(
+                              tr('welcome'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0x99090937),
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(height: 10),
-                        Text(
-                          tr('register_title'),
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Color(0xFF090937),
+                        Align(
+                          alignment: Alignment.centerLeft,  
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: Text(
+                              tr('register_title'),
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Color(0xFF090937),
+                              ),
+                            ),
                           ),
                         ),
                       ],

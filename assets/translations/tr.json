@@ -32,5 +32,7 @@
   "welcome_back":"Yeniden Hoş Geldiniz",
   "welcome":"Hoş Geldiniz",
   "login_successful":"Giriş Başarılı",
-  "purchase_functionality_coming_soon": "Satın Alma Fonksiyonu Yakında Gelecek"
+  "purchase_functionality_coming_soon": "Satın Alma Fonksiyonu Yakında Gelecek",
+  "please_enter_email":"Lütfen E-Mailinizi Giriniz",
+  "please_enter_valid_email":"Lütfen Geçerli Bir E-Mail Giriniz"
 }

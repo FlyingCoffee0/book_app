@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piton_books/providers/providers.dart';
@@ -8,7 +8,7 @@ import '../services/api_service.dart';
 final authServiceProvider = Provider<AuthService>((ref) {
   final apiService = ref.read(apiServiceProvider);
   final secureStorage = ref.read(secureStorageProvider);
-  return AuthService(apiService, secureStorage); // İki parametreyi sağlıyoruz
+  return AuthService(apiService, secureStorage); 
 });
 
 class AuthService {

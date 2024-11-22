@@ -32,5 +32,7 @@
   "welcome_back":"Welcome Back",
   "welcome":"Welcome",
   "login_successful":"Login Successful",
-  "purchase_functionality_coming_soon": "Purchase functionality coming soon"
+  "purchase_functionality_coming_soon": "Purchase functionality coming soon",
+  "please_enter_email":"Please Entery Your E-Mail",
+  "please_enter_valid_email":"Please Enter a Valid E-Mail"
 }
