@@ -71,7 +71,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
             ),
             // Kapak görselini dinamik olarak yükleme
             Center(
-              child: FutureBuilder<String?>(
+              child: FutureBuilder<String?>( 
                 future: Product.fetchImageUrl(widget.product.fileName),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -94,7 +94,20 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
               alignment: Alignment.center,
               child: Text(
                 widget.product.name,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(height: 10),
+            // Yazar bilgisi
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                widget.product.author ?? "Unknown", 
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xA6090937),
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -102,13 +115,12 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
             // Özet Başlığı
             Text(
               "Summary",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             // Ürün açıklaması
             FutureBuilder<String?>(
-              future: Future.value(widget.product
-                  .description), 
+              future: Future.value(widget.product.description), 
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -126,7 +138,7 @@ class _BookDetailsScreenState extends ConsumerState<BookDetailsScreen> {
                   return Text(
                     snapshot.data!,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Color(0xA6090937),
                     ),
                   );

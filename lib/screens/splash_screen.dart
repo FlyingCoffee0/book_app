@@ -1,52 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'login_screen.dart';
+import '../providers/navigation_provider.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
+      if (mounted) {
+        ref.read(navigationProvider.notifier).pushReplacement(
+          context,
+          LoginScreen(),
+        );
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2C2C54), // Koyu arka plan rengi
+      backgroundColor: Color.fromARGB(255, 3, 3, 63),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Uygulama logosu
           Center(
-            child: Icon(
-              Icons.shop_2_rounded,
-              color: Color(0xFF7A77FF), // Mor renkli ikon
-              size: 120,
+            child: Image.asset(
+              'assets/logo.png',
+              width: 120,
+              height: 120,
             ),
           ),
-          SizedBox(height: 40),
+          SizedBox(height: 250),
           // Login düğmesi
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40.0),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
+                // Ensure the widget is still mounted before navigating
+                if (mounted) {
+                  ref.read(navigationProvider.notifier).pushReplacement(
+                    context,
+                    LoginScreen(),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFFF6F61), // Turuncu düğme rengi
-                padding: EdgeInsets.symmetric(vertical: 15),
+                backgroundColor: Color(0xFFFF6F61),
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 80),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -64,15 +71,18 @@ class _SplashScreenState extends State<SplashScreen> {
           // Skip butonu
           TextButton(
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
+              // Ensure the widget is still mounted before navigating
+              if (mounted) {
+                ref.read(navigationProvider.notifier).pushReplacement(
+                  context,
+                  LoginScreen(),
+                );
+              }
             },
             child: Text(
               "Skip",
               style: TextStyle(
-                color: Colors.white,
+                color: Color(0xFF6251DD),
                 fontSize: 14,
               ),
             ),

@@ -35,7 +35,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     child: Column(
                       children: [
                         Image.asset(
-                          'assets/logo.png', // Logo eklemek için
+                          'assets/MidLogo.png', 
                           height: 100,
                         ),
                         SizedBox(height: 20),

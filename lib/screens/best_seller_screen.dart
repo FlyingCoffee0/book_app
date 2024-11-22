@@ -113,7 +113,7 @@ class BestSellerScreen extends ConsumerWidget {
                                     },
                                   ),
                                 ),
-                                // Product Name and Price
+                                // Product Name, Author, and Price
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
@@ -133,12 +133,27 @@ class BestSellerScreen extends ConsumerWidget {
                                         ),
                                       ),
                                       SizedBox(height: 4),
+                                      // Author 
+                                      Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text(
+                                          product.author ?? "Unknown", 
+                                          style: TextStyle(
+                                            fontSize: 8,
+                                            color: Colors.grey,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.left, 
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
                                       Align(
                                         alignment: Alignment.bottomRight,
                                         child: Text(
                                           "\$${product.price.toStringAsFixed(2)}",
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: Color(0xFF6251DD),
                                           ),
                                         ),

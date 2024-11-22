@@ -5,7 +5,8 @@ class Product {
   final String name;
   final double price;
   final String fileName;
-  final String? description; // Eklenen alan
+  final String? description; 
+  final String? author;
   String? _coverImage;
 
   Product({
@@ -13,7 +14,8 @@ class Product {
     required this.name,
     required this.price,
     required this.fileName,
-    this.description, // Eklenen alan
+    this.description, 
+    this.author,
   });
 
   Future<String?> get coverImage async {
@@ -46,7 +48,8 @@ class Product {
       name: json['name'],
       price: json['price'].toDouble(),
       fileName: json['cover'],
-      description: json['description'], // API'den gelen "description" alanını alıyoruz
+      description: json['description'], 
+       author: json['author'],
     );
   }
 }

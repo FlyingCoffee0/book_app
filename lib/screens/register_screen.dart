@@ -35,7 +35,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     child: Column(
                       children: [
                         Image.asset(
-                          'assets/logo.png', // Logo yerine görsel kullanılıyor
+                          'assets/MidLogo.png', 
                           height: 100,
                         ),
                         SizedBox(height: 20),
