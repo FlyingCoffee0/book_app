@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:piton_books/providers/providers.dart';
+import 'package:piton_books/screens/login_screen.dart';
 import '../providers/catalog_search_provider.dart';
 import 'best_seller_screen.dart';
 import 'book_details_screen.dart';
@@ -13,6 +15,7 @@ class CatalogScreen extends ConsumerWidget {
     final searchQuery = ref.watch(categorySearchQueryProvider);
     final filteredCategories = ref.watch(filteredCategoriesProvider);
     final navigationNotifier = ref.read(navigationProvider.notifier);
+    final authService = ref.read(authServiceProvider);  
 
     return Scaffold(
       appBar: AppBar(
@@ -29,12 +32,27 @@ class CatalogScreen extends ConsumerWidget {
               "catalog".tr(),
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            // Language Change Button
-            IconButton(
-              icon: Icon(Icons.language),
-              onPressed: () {
-                context.locale = context.locale == Locale('en') ? Locale('tr') : Locale('en');
-              },
+            Row(
+              children: [
+                // Language Change Button
+                IconButton(
+                  icon: Icon(Icons.language),
+                  onPressed: () {
+                    context.locale = context.locale == Locale('en') ? Locale('tr') : Locale('en');
+                  },
+                ),
+                // Logout Button
+                IconButton(
+                  icon: Icon(Icons.exit_to_app),  
+                  onPressed: () async {
+                    await authService.logout(); 
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Logged out successfully"))
+                    );
+                    navigationNotifier.pushReplacement(context, LoginScreen()); 
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -84,6 +102,7 @@ class CatalogScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
+              autofocus: false,
               decoration: InputDecoration(
                 hintText: "search_categories".tr(),
                 hintStyle: TextStyle(color: Color(0x66090937)),
@@ -167,15 +186,15 @@ class CatalogScreen extends ConsumerWidget {
                                             );
                                           },
                                           child: Container(
-                                            width: 200,
+                                            width: 220,
                                             margin: EdgeInsets.only(right: 10),
                                             child: Card(
                                               elevation: 3,
                                               child: Row(
                                                 children: [
                                                   // Image loaded using FutureBuilder
-                                                  FutureBuilder<String?>(
-                                                    future: product.coverImage, // Using the coverImage getter
+                                                  FutureBuilder<String?>( 
+                                                    future: product.coverImage, 
                                                     builder: (context, snapshot) {
                                                       if (snapshot.connectionState == ConnectionState.waiting) {
                                                         return SizedBox(
