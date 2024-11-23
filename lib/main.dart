@@ -23,7 +23,7 @@ void main() async {
 class MyApp extends ConsumerWidget {  
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Navigator'ı yönetmek için global navigatorKey kullanıyoruz
+    // Navigator'ı yönetmek için global navigatorKey kullanma
     final navigatorKey = ref.watch(navigationProvider); 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

@@ -29,7 +29,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Uygulama logosu
+          // App logo
           Center(
             child: Image.asset(
               'assets/logo.png',
@@ -38,7 +38,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             ),
           ),
           SizedBox(height: 250),
-          // Login düğmesi
+          // Login button
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40.0),
             child: ElevatedButton(

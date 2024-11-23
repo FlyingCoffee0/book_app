@@ -15,12 +15,11 @@ Future<Response> post(String endpoint, Map<String, dynamic> data) async {
     return await _dio.post(endpoint, data: data);
   } on DioError catch (e) {
     if (e.response != null) {
-      // Sunucudan yanıt gelmiş ancak hata kodu dönmüş
+      // Sunucudan yanıt gelmiş mi ? Kontrol
       final errorMessage = e.response?.data["message"] ?? "Unexpected server error";
       print("API Error: $errorMessage, Status Code: ${e.response?.statusCode}");
       throw errorMessage;
     } else {
-      // Sunucudan yanıt gelmemiş (internet bağlantısı vb.)
       print("DioError: ${e.message}");
       throw "Network error: ${e.message}";
     }

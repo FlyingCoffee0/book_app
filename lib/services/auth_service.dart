@@ -39,7 +39,7 @@ class AuthService {
       if (token != null) {
         await _storage.write(key: "auth_token", value: token); 
         if (rememberMe) {
-          await _storage.write(key: "remember_me", value: "true"); // Remember me bilgisi kaydetme
+          await _storage.write(key: "remember_me", value: "true"); 
         }
         print("Login successful, token saved!");
       } else {
@@ -86,7 +86,7 @@ class AuthService {
   Future<void> logout() async {
     try {
       await _storage.delete(key: "auth_token");
-      await _storage.delete(key: "remember_me"); // Remember me bilgisini de siliyoruz
+      await _storage.delete(key: "remember_me"); 
       print("Logout successful, token removed!");
     } catch (e) {
       print("Logout error: $e");

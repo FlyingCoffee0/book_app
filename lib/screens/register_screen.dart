@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import 'login_screen.dart';
-import '../providers/navigation_provider.dart';  
+import '../providers/navigation_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -20,7 +20,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
-    final navigationNotifier = ref.read(navigationProvider.notifier);  
+    final navigationNotifier = ref.read(navigationProvider.notifier);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -36,12 +36,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     child: Column(
                       children: [
                         Image.asset(
-                          'assets/MidLogo.png', 
+                          'assets/MidLogo.png',
                           height: 100,
                         ),
                         SizedBox(height: 20),
                         Align(
-                          alignment: Alignment.centerLeft, 
+                          alignment: Alignment.centerLeft,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20.0),
                             child: Text(
@@ -56,7 +56,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                         SizedBox(height: 10),
                         Align(
-                          alignment: Alignment.centerLeft,  
+                          alignment: Alignment.centerLeft,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20.0),
                             child: Text(
@@ -71,6 +71,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       ],
                     ),
                   ),
+                  //Name part
                   SizedBox(height: 40),
                   Text(
                     tr('name'),
@@ -101,6 +102,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     },
                   ),
                   SizedBox(height: 20),
+                  //E Mail Part
                   Text(
                     tr('email'),
                     style: TextStyle(
@@ -133,6 +135,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     },
                   ),
                   SizedBox(height: 20),
+
+                  //Password Part
                   Text(
                     tr('password'),
                     style: TextStyle(
@@ -160,6 +164,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         return tr('please_enter_password');
                       } else if (value.length < 6 || value.length > 20) {
                         return tr('password_length');
+                      } else if (!RegExp(r'^[a-zA-Z0-9]{6,20}$')
+                          .hasMatch(value)) {
+                        return tr(
+                            'password_must_be_alphanumeric'); 
                       }
                       return null;
                     },

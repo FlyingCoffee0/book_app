@@ -34,5 +34,7 @@
   "login_successful":"Login Successful",
   "purchase_functionality_coming_soon": "Purchase functionality coming soon",
   "please_enter_email":"Please Entery Your E-Mail",
-  "please_enter_valid_email":"Please Enter a Valid E-Mail"
+  "please_enter_valid_email":"Please Enter a Valid E-Mail",
+  "password_must_be_alphanumeric": "Password Must Be Alphanumeric",
+  "please_enter_name":"Please Enter A Name"
 }

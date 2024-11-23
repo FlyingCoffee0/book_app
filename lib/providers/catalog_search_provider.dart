@@ -11,7 +11,7 @@ final categorySearchQueryProvider = StateProvider<String>((ref) => "");
 
 // Kategoriler için FutureProvider
 final filteredCategoriesProvider = FutureProvider<List<Category>>((ref) {
-  final searchQuery = ref.watch(categorySearchQueryProvider).toLowerCase(); // Yeni arama provider'ı
+  final searchQuery = ref.watch(categorySearchQueryProvider).toLowerCase(); 
   final catalogService = ref.watch(catalogServiceProvider);
 
   return catalogService.getCategories().then(

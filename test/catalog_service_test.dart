@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:dio/dio.dart';
-import 'package:piton_books/models/category_model.dart';
 import 'package:piton_books/services/api_service.dart';
 import 'package:piton_books/services/catalog_service.dart';
 import 'package:piton_books/services/storage_service.dart';

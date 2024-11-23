@@ -5,7 +5,7 @@ import 'package:piton_books/services/local_auth_service.dart';
 import '../providers/auth_provider.dart';
 import 'register_screen.dart';
 import 'catalog_screen.dart';
-import '../providers/navigation_provider.dart';  
+import '../providers/navigation_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -18,7 +18,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _rememberMe = false;
   final _formKey = GlobalKey<FormState>();
-  final _biometricAuthService = BiometricAuthService(); 
+  final _biometricAuthService = BiometricAuthService();
 
   @override
   void initState() {
@@ -26,6 +26,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     _checkRememberMe();
   }
 
+  //Remember Me
   Future<void> _checkRememberMe() async {
     final authService = ref.read(authServiceProvider);
     final rememberMe = await authService.isRememberMe();
@@ -42,7 +43,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
-    final navigationNotifier = ref.read(navigationProvider.notifier);  
+    final navigationNotifier = ref.read(navigationProvider.notifier);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -56,10 +57,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
+                    //App Logo
                     child: Column(
                       children: [
                         Image.asset(
-                          'assets/MidLogo.png', 
+                          'assets/MidLogo.png',
                           height: 100,
                         ),
                         SizedBox(height: 60),
@@ -102,6 +104,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       color: Color(0xFF090937),
                     ),
                   ),
+                  //Email part
                   SizedBox(height: 5),
                   TextFormField(
                     controller: _emailController,
@@ -126,6 +129,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       return null;
                     },
                   ),
+                  //Password part
                   SizedBox(height: 20),
                   Text(
                     tr('password'),
@@ -154,10 +158,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         return tr('please_enter_password');
                       } else if (value.length < 6 || value.length > 20) {
                         return tr('password_length');
+                      } else if (!RegExp(r'^[a-zA-Z0-9]{6,20}$')
+                          .hasMatch(value)) {                        
+                        return tr(
+                            'password_must_be_alphanumeric'); 
                       }
                       return null;
                     },
                   ),
+
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -214,7 +223,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                             child: Text(
                               tr('login_button'),
-                              style: TextStyle(fontSize: 18, color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
                             ),
                           ),
                         ),
@@ -222,21 +232,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   // Biometric login button
                   ElevatedButton(
                     onPressed: () async {
-                      bool isAuthenticated = await _biometricAuthService.authenticateWithBiometrics();
+                      bool isAuthenticated = await _biometricAuthService
+                          .authenticateWithBiometrics();
                       if (isAuthenticated) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Authenticated successfully")));
-                       
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Authenticated successfully")));
+
                         navigationNotifier.pushReplacement(
                           context,
                           CatalogScreen(),
                         );
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Authentication failed")));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Authentication failed")));
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16,horizontal: 92,),
-                      backgroundColor: Color(0xFF6251DD), 
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 92,
+                      ),
+                      backgroundColor: Color(0xFF6251DD),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -255,7 +271,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Future<void> _login(AuthNotifier authNotifier, NavigationNotifier navigationNotifier) async {
+  Future<void> _login(
+      AuthNotifier authNotifier, NavigationNotifier navigationNotifier) async {
     try {
       await authNotifier.login(
         email: _emailController.text,

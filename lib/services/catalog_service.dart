@@ -141,8 +141,8 @@ Future<List<Product>> getAllProducts() async {
 }
      // Favorileri alma
   Future<List<Product>> getFavorites() async {
-  final response = await _apiService.get("favorites");
-  final List data = response.data["favorites"];
+  final response = await _apiService.get("like");
+  final List data = response.data["like"];
   return data.map((json) => Product.fromJson(json)).toList();
 }
 
