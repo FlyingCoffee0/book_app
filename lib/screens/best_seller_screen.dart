@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/catalog_search_provider.dart';
 import 'book_details_screen.dart';
 import '../providers/navigation_provider.dart';
-import 'package:easy_localization/easy_localization.dart'; 
+import 'package:easy_localization/easy_localization.dart';
 
 class BestSellerScreen extends ConsumerWidget {
   final int categoryId;
@@ -20,7 +20,7 @@ class BestSellerScreen extends ConsumerWidget {
         title: Align(
           alignment: Alignment.centerRight,
           child: Text(
-            "best_seller".tr(),  
+            "best_seller".tr(),
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
@@ -33,9 +33,10 @@ class BestSellerScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
-              onChanged: (value) => ref.read(searchQueryProvider.notifier).state = value,
+              onChanged: (value) =>
+                  ref.read(searchQueryProvider.notifier).state = value,
               decoration: InputDecoration(
-                hintText: "search_products".tr(),  
+                hintText: "search_products".tr(),
                 hintStyle: TextStyle(color: Color(0x66090937)),
                 prefixIcon: Icon(Icons.search, color: Color(0x66090937)),
                 filled: true,
@@ -60,14 +61,14 @@ class BestSellerScreen extends ConsumerWidget {
             child: filteredProducts.when(
               data: (products) {
                 if (products.isEmpty) {
-                  return Center(child: Text("no_products_found".tr()));  
+                  return Center(child: Text("no_products_found".tr()));
                 }
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.70,
+                      childAspectRatio: 0.60,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
                     ),
@@ -75,11 +76,11 @@ class BestSellerScreen extends ConsumerWidget {
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return GestureDetector(
-                        onTap: () {                   
+                        onTap: () {
                           ref.read(navigationProvider.notifier).push(
-                            context,
-                            BookDetailsScreen(product: product),
-                          );
+                                context,
+                                BookDetailsScreen(product: product),
+                              );
                         },
                         child: Card(
                           elevation: 4,
@@ -91,18 +92,25 @@ class BestSellerScreen extends ConsumerWidget {
                               children: [
                                 // Product image
                                 Container(
-                                  height: 200,
+                                  height: 240,
                                   width: double.infinity,
                                   child: FutureBuilder<String?>(
-                                    future: product.coverImage, // Cover image getter
+                                    future: product.coverImage,
                                     builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return Center(child: CircularProgressIndicator());
-                                      } else if (snapshot.hasError || snapshot.data == null) {
-                                        return Center(child: Icon(Icons.image_not_supported, size: 100));
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError ||
+                                          snapshot.data == null) {
+                                        return Center(
+                                            child: Icon(
+                                                Icons.image_not_supported,
+                                                size: 100));
                                       } else {
                                         return ClipRRect(
-                                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(16)),
                                           child: Image.network(
                                             snapshot.data!,
                                             fit: BoxFit.cover,
@@ -117,9 +125,12 @@ class BestSellerScreen extends ConsumerWidget {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start, 
                                     children: [
+                                      // Product Name
                                       Align(
-                                        alignment: Alignment.bottomLeft,
+                                        alignment: Alignment.topLeft,
                                         child: Text(
                                           product.name,
                                           style: TextStyle(
@@ -129,34 +140,36 @@ class BestSellerScreen extends ConsumerWidget {
                                           ),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
+                                          textAlign: TextAlign.left,
                                         ),
                                       ),
                                       SizedBox(height: 4),
-                                      // Author 
-                                      Align(
-                                        alignment: Alignment.bottomLeft,
-                                        child: Text(
-                                          product.author ?? "Unknown", 
-                                          style: TextStyle(
-                                            fontSize: 8,
-                                            color: Colors.grey,
+                                      // Author and Price 
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          // Author
+                                          Text(
+                                            product.author ?? "Unknown",
+                                            style: TextStyle(
+                                              fontSize: 8,
+                                              color: Colors.grey,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.left,
                                           ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left, 
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: Text(
-                                          "\$${product.price.toStringAsFixed(2)}",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xFF6251DD),
+                                          Spacer(), 
+                                          // Price
+                                          Text(
+                                            "\$${product.price.toStringAsFixed(2)}",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xFF6251DD),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                     ],
                                   ),
